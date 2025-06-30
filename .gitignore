@@ -6,3 +6,5 @@ __pycache__/
 
 # dsniff-old build artifacts
 dsniff-old/*.log
+# Ignore Debian packaging in dsniff-old (not required for build)
+dsniff-old/debian/
