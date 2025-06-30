@@ -10,11 +10,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
-      DSNIFF_DB_PATH: dummy=no-bdb
-      HAVE_PCAP_BPF_H: no
       CI: 1
+      DSNIFF_DB_PATH: dummy=no-bdb
+      ac_cv_header_pcap_bpf_h: no
+      ac_cv_header_pcap_nopacketinfo_h: yes
+      ac_cv_header_pcap_linux_types_h: no
 
     steps:
       - name: Checkout code
@@ -45,6 +46,14 @@ jobs:
           cd dsniff-old
           autoreconf -i
           chmod +x install-sh
+          cd ..
+
+      - name: Patch configure to skip broken pcap-bpf.h checks
+        run: |
+          cd dsniff-old
+          sed -i 's/test "$HAVE_PCAP_BPF_H"/test "no"/' configure
+          sed -i 's/return pcap-bpf.h//' configure
+          sed -i 's/exit pcap-bpf.h//' configure
           cd ..
 
       - name: Install Python dependencies
