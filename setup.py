@@ -13,26 +13,29 @@ class PostInstallCommand(install):
         tmp_dir = os.path.join(cwd, 'tmp')
         build_dir = os.path.join(cwd, 'build')
         c_src_dir = os.path.join(cwd, 'dsniff-old')
+
         # Create directories
         os.makedirs(tmp_dir, exist_ok=True)
         os.makedirs(build_dir, exist_ok=True)
+
         # Environment for build
         env = os.environ.copy()
         env['TMPDIR'] = tmp_dir
+
         # Configure library paths (override via environment)
         libpcap = env.get('DSNIFF_LIBPCAP', '/usr/local/opt/libpcap')
         libnet = env.get('DSNIFF_LIBNET', '/usr/local/opt/libnet')
         libnids = env.get('DSNIFF_LIBNIDS', '/usr/local/opt/libnids')
         openssl = env.get('DSNIFF_OPENSSL', '/usr/local/opt/openssl')
-        # Auto-detect and inject Berkeley DB include/lib paths if provided or on macOS Homebrew
-        # Allow explicit override; drop if invalid
+
+        # Auto-detect Berkeley DB include/lib paths if provided or on macOS Homebrew
         db_path = env.get('DSNIFF_DB_PATH')
         if db_path:
             inc = os.path.join(db_path, 'include', 'db.h')
             libdir = os.path.join(db_path, 'lib')
             if not (os.path.isfile(inc) and os.path.isdir(libdir)):
-                # Invalid override, ignore
-                db_path = None
+                db_path = None  # Invalid override
+
         if not db_path and sys.platform == 'darwin':
             for base in ('/opt/homebrew/opt', '/usr/local/opt'):
                 if os.path.isdir(base):
@@ -46,40 +49,54 @@ class PostInstallCommand(install):
                                 break
                     if db_path:
                         break
+
         if db_path:
             # inject compiler flags for DB include and lib
             env['CPPFLAGS'] = env.get('CPPFLAGS', '') + f' -I{db_path}/include'
             env['LDFLAGS'] = env.get('LDFLAGS', '') + f' -L{db_path}/lib'
-        # Configure C build (let configure auto-detect dynamic libs)
-        config_cmd = [
-            os.path.join(c_src_dir, 'configure'),
-            f'--with-libpcap={libpcap}',
-            f'--with-libnet={libnet}',
-            f'--with-libnids={libnids}',
-            f'--with-openssl={openssl}',
-            '--without-x',
-            # install executables into build_dir/bin for Python package
-            f'--sbindir={os.path.join(build_dir, "bin")}',
-            f'--prefix={build_dir}',
-        ]
-        # Configure Berkeley DB support:
-        #  - If a DB path is detected or provided, pass --with-db=PATH
-        #  - On macOS without DB, disable support
-        if db_path:
-            config_cmd.insert(1, f'--with-db={db_path}')
-        elif sys.platform == 'darwin':
-            config_cmd.insert(1, '--with-db=no')
-        subprocess.check_call(config_cmd, cwd=c_src_dir, env=env)
-        # Build and install
-        subprocess.check_call(['make'], cwd=c_src_dir, env=env)
-        subprocess.check_call(['make', 'install'], cwd=c_src_dir, env=env)
+
+        # Make sure we're in the right directory when running configure
+        old_cwd = os.getcwd()
+        os.chdir(c_src_dir)
+
+        try:
+            # Configure C build
+            config_cmd = [
+                './configure',
+                f'--with-libpcap={libpcap}',
+                f'--with-libnet={libnet}',
+                f'--with-libnids={libnids}',
+                f'--with-openssl={openssl}',
+                '--without-x',
+                f'--sbindir={os.path.join(build_dir, "bin")}',
+                f'--prefix={build_dir}',
+            ]
+
+            # Configure Berkeley DB support
+            if db_path:
+                config_cmd.insert(1, f'--with-db={db_path}')
+            elif sys.platform == 'darwin':
+                config_cmd.insert(1, '--with-db=no')
+
+            print(f"Running configure in {c_src_dir}")
+            subprocess.check_call(config_cmd, env=env)
+
+            # Build and install
+            subprocess.check_call(['make'], env=env)
+            subprocess.check_call(['make', 'install'], env=env)
+
+        finally:
+            # Always go back to original working directory
+            os.chdir(old_cwd)
+
         # Copy binaries to Python package
         dest_bin = os.path.join(cwd, 'dsniff_py', 'bin')
         if os.path.exists(dest_bin):
             shutil.rmtree(dest_bin)
         shutil.copytree(os.path.join(build_dir, 'bin'), dest_bin)
+
         # Run standard install
-        install.run(self)
+        super().run()
 
 long_description = ''
 if os.path.exists('README.md'):
