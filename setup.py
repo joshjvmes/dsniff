@@ -28,27 +28,31 @@ class PostInstallCommand(install):
         libnids = env.get('DSNIFF_LIBNIDS', '/usr/local/opt/libnids')
         openssl = env.get('DSNIFF_OPENSSL', '/usr/local/opt/openssl')
 
-        # Auto-detect Berkeley DB include/lib paths if provided or on macOS Homebrew
-        db_path = env.get('DSNIFF_DB_PATH')
-        if db_path:
-            inc = os.path.join(db_path, 'include', 'db.h')
-            libdir = os.path.join(db_path, 'lib')
-            if not (os.path.isfile(inc) and os.path.isdir(libdir)):
-                db_path = None  # Invalid override
+        # ✅ Always skip Berkeley DB if we're in CI (e.g., GitHub Actions)
+        if os.getenv('CI'):
+            db_path = None
+        else:
+            # Auto-detect Berkeley DB include/lib paths if provided or on macOS Homebrew
+            db_path = env.get('DSNIFF_DB_PATH')
+            if db_path:
+                inc = os.path.join(db_path, 'include', 'db.h')
+                libdir = os.path.join(db_path, 'lib')
+                if not (os.path.isfile(inc) and os.path.isdir(libdir)):
+                    db_path = None  # Invalid override
 
-        if not db_path and sys.platform == 'darwin':
-            for base in ('/opt/homebrew/opt', '/usr/local/opt'):
-                if os.path.isdir(base):
-                    for d in os.listdir(base):
-                        if d.startswith('berkeley-db'):
-                            cand = os.path.join(base, d)
-                            inc = os.path.join(cand, 'include', 'db.h')
-                            libdir = os.path.join(cand, 'lib')
-                            if os.path.isfile(inc) and os.path.isdir(libdir):
-                                db_path = cand
-                                break
-                    if db_path:
-                        break
+            if not db_path and sys.platform == 'darwin':
+                for base in ('/opt/homebrew/opt', '/usr/local/opt'):
+                    if os.path.isdir(base):
+                        for d in os.listdir(base):
+                            if d.startswith('berkeley-db'):
+                                cand = os.path.join(base, d)
+                                inc = os.path.join(cand, 'include', 'db.h')
+                                libdir = os.path.join(cand, 'lib')
+                                if os.path.isfile(inc) and os.path.isdir(libdir):
+                                    db_path = cand
+                                    break
+                        if db_path:
+                            break
 
         if db_path:
             # inject compiler flags for DB include and lib
@@ -72,8 +76,11 @@ class PostInstallCommand(install):
                 f'--prefix={build_dir}',
             ]
 
-            # Configure Berkeley DB support
-            if db_path:
+            # ✅ Always disable Berkeley DB in CI
+            if os.getenv('CI'):
+                config_cmd.insert(1, '--with-db=no')
+                print("Forcing --with-db=no in CI")
+            elif db_path:
                 config_cmd.insert(1, f'--with-db={db_path}')
             elif sys.platform == 'darwin':
                 config_cmd.insert(1, '--with-db=no')
