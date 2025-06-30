@@ -31,7 +31,5 @@ tcpkill = "dsniff_py.cli:main"
 tcpnice = "dsniff_py.cli:main"
 dsniff-menu = "dsniff_py.menu:main"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["dsniff_py"]
-exclude = ["dsniff_py.bin"]
+[tool.setuptools]
+packages = ["dsniff_py", "dsniff_py.bin"]

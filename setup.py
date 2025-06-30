@@ -142,7 +142,6 @@ setup(
         'build_py': ConditionalBuild,
     },
     python_requires='>=3.6',
-    package_data={'dsniff_py': ['bin/*']},
     data_files=[],
     zip_safe=False,
 )
