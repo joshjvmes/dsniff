@@ -14,6 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Ensure install-sh is executable
+        run: |
+          chmod +x dsniff-old/install-sh
+
       - name: Setup Python
         uses: actions/setup-python@v5  # Updated to latest version
         with:
