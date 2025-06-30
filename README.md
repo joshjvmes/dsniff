@@ -2,6 +2,8 @@
 
 This package provides a Python wrapper for the **dsniff** network sniffer suite (originally by Dug Song), allowing you to install and use dsniff tools via `pip`.
 
+pip install .
+
 ## Installation
 
 Ensure you have the required dependencies:

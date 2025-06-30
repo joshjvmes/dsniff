@@ -16,6 +16,7 @@ jobs:
       ac_cv_header_pcap_bpf_h: no
       ac_cv_header_pcap_nopacketinfo_h: yes
       ac_cv_header_pcap_linux_types_h: no
+      DSNIFF_SKIP_NATIVE_BUILD: 1
 
     steps:
       - name: Checkout code

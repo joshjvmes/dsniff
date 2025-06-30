@@ -3,3 +3,6 @@ include dsniff_py/*.py
 
 # Include all files needed for building dsniff-old
 recursive-include dsniff-old *
+
+include README.md LICENSE pyproject.toml setup.py
+recursive-include dsniff_py *.py
