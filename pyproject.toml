@@ -18,9 +18,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 keywords = ["networking", "security", "packet-sniffer"]
-urls = {
+urls = [{
     homepage = "",
-}
+}]
 
 dependencies = []
 
