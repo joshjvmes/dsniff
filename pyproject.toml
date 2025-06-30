@@ -7,6 +7,7 @@ name = "dsniff"
 version = "0.1.0"
 description = "This package provides a new Python wrapper for the dsniff network sniffer suite (originally by Dug Song)"
 readme = "README.md"
+license = {file = "LICENSE.txt"}
 requires-python = ">=3.6"
 authors = [
     { name = "Josh James", email = "josh@rocketnow.com" }
@@ -29,5 +30,3 @@ webspy = "dsniff_py.cli:main"
 tcpkill = "dsniff_py.cli:main"
 tcpnice = "dsniff_py.cli:main"
 dsniff-menu = "dsniff_py.menu:main"
-
-license = {file = "LICENSE.txt"}
