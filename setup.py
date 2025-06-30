@@ -111,13 +111,13 @@ if os.path.exists('README.md'):
 setup(
     name='dsniff',
     version='0.1.0',
-    author='Modified dsniff',
-    author_email='',
+    author='Modified Dug Song dsniff by Josh James',
+    author_email='josh@rocketnow.com',
     description='Python wrapper for dsniff network utilities',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='',
-    license='BSD',
+    license='BSD-Source-Code',
     packages=find_packages(),
     include_package_data=True,
     entry_points={
