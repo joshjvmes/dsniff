@@ -1,0 +1,8 @@
+build/
+tmp/
+dist/
+*.egg-info/
+__pycache__/
+
+# dsniff-old build artifacts
+dsniff-old/*.log

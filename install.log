@@ -1,0 +1,165 @@
+running install
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/_distutils/cmd.py:90: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking for a BSD-compatible install... /usr/bin/install -c
+checking for ranlib... ranlib
+checking how to run the C preprocessor... gcc -E
+checking for X... disabled
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking err.h usability... yes
+checking err.h presence... yes
+checking for err.h... yes
+checking fcntl.h usability... yes
+checking fcntl.h presence... yes
+checking for fcntl.h... yes
+checking sys/ioctl.h usability... yes
+checking sys/ioctl.h presence... yes
+checking for sys/ioctl.h... yes
+checking sys/queue.h usability... yes
+checking sys/queue.h presence... yes
+checking for sys/queue.h... yes
+checking for unistd.h... (cached) yes
+checking libgen.h usability... yes
+checking libgen.h presence... yes
+checking for libgen.h... yes
+checking net/if_tun.h usability... no
+checking net/if_tun.h presence... no
+checking for net/if_tun.h... no
+checking for MIN and MAX in sys/param.h... yes
+checking for an ANSI C-conforming const... yes
+checking for size_t... yes
+checking whether struct tm is in sys/time.h or time.h... time.h
+checking for u_int32_t... yes
+checking for u_int64_t... yes
+checking for in_addr_t... yes
+checking whether gcc needs -traditional... no
+checking for working memcmp... yes
+checking return type of signal handlers... void
+checking for strftime... yes
+checking for gethostname... yes
+checking for socket... yes
+checking for strdup... yes
+checking for strstr... yes
+checking for ether_ntoa... yes
+checking for xdr_fhstatus in -lrpcsvc... no
+checking for socket in -lsocket... no
+checking for gethostbyname in -lnsl... no
+checking for dn_expand in -lresolv... yes
+checking for __dn_expand in -lresolv... no
+checking for dirname... yes
+checking for strlcpy... yes
+checking for strlcat... yes
+checking for strsep... yes
+checking for MD5Update... no
+checking for warnx... yes
+checking for ether_ntoa... (cached) yes
+checking for Berkeley DB with 1.85 compatibility... /usr/local/opt/berkeley-db@18
+checking for libpcap... /usr/local/opt/libpcap
+checking for libnet... /usr/local/opt/libnet
+checking for libnids... /usr/local/opt/libnids
+checking whether libnids version is good... yes
+checking for OpenSSL... /usr/local/opt/openssl
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: WARNING:  'Makefile.in' seems to ignore the --datarootdir setting
+config.status: creating config.h
+config.status: config.h is unchanged
+gcc -g -O2 -D_BSD_SOURCE -DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSD_BYTE_SWAP -DDSNIFF_LIBDIR=\"/Users/joshjames/Downloads/prime_dsniff/build/share/dsniff/\" -I.  -I./missing -I/usr/local/opt/libpcap/include -I/usr/local/opt/libnet/include -I/usr/local/opt/libnids/include -I/usr/local/opt/openssl/include -I/usr/local/opt/berkeley-db@18/include -c ./dnsspoof.c
+In file included from ./dnsspoof.c:32:
+./pcaputil.h:14:9: error: conflicting types for 'pcap_init'
+   14 | pcap_t *pcap_init(char *intf, char *filter, int snaplen);
+      |         ^
+/usr/local/opt/libpcap/include/pcap/pcap.h:435:14: note: previous declaration is here
+  435 | PCAP_API int    pcap_init(unsigned int, char *);
+      |                 ^
+./dnsspoof.c:230:10: warning: assigning to 'u_char *' (aka 'unsigned char *') from 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+  230 |                 if ((q = dns_lookup_ptr(name)) == NULL)
+      |                        ^ ~~~~~~~~~~~~~~~~~~~~
+./dnsspoof.c:234:20: warning: passing 'u_char *' (aka 'unsigned char *') to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+  234 |                 anslen = dn_comp(q, p + 12, 256, NULL, NULL);
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/resolv.h:443:31: note: passing argument to parameter here
+  443 | int             dn_comp __P((const char *, u_char *, int, u_char **, u_char **));
+      |                                          ^
+./dnsspoof.c:303:28: warning: 'pcap_lookupdev' is deprecated: use 'pcap_findalldevs' and use the first device [-Wdeprecated-declarations]
+  303 |         if (dev == NULL && (dev = pcap_lookupdev(buf)) == NULL)
+      |                                   ^
+/usr/local/opt/libpcap/include/pcap/pcap.h:443:1: note: 'pcap_lookupdev' has been explicitly marked deprecated here
+  443 | PCAP_DEPRECATED("use 'pcap_findalldevs' and use the first device")
+      | ^
+/usr/local/opt/libpcap/include/pcap/funcattrs.h:327:47: note: expanded from macro 'PCAP_DEPRECATED'
+  327 |   #define PCAP_DEPRECATED(msg)  __attribute__((deprecated(msg)))
+      |                                                ^
+./dnsspoof.c:315:37: error: too many arguments to function call, expected 2, have 3
+  315 |         if ((pcap_pd = pcap_init(dev, buf, 128)) == NULL)
+      |                        ~~~~~~~~~           ^~~
+/usr/local/opt/libpcap/include/pcap/pcap.h:435:14: note: 'pcap_init' declared here
+  435 | PCAP_API int    pcap_init(unsigned int, char *);
+      |                 ^         ~~~~~~~~~~~~~~~~~~~~
+3 warnings and 2 errors generated.
+make: *** [dnsspoof.o] Error 1
+Traceback (most recent call last):
+  File "/Users/joshjames/Downloads/prime_dsniff/setup.py", line 80, in <module>
+    setup(
+    ~~~~~^
+        name='dsniff',
+        ^^^^^^^^^^^^^^
+    ...<29 lines>...
+        python_requires='>=3.6',
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/__init__.py", line 117, in setup
+    return distutils.core.setup(**attrs)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/_distutils/core.py", line 186, in setup
+    return run_commands(dist)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/_distutils/core.py", line 202, in run_commands
+    dist.run_commands()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/_distutils/dist.py", line 1002, in run_commands
+    self.run_command(cmd)
+    ~~~~~~~~~~~~~~~~^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/dist.py", line 1104, in run_command
+    super().run_command(command)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+    cmd_obj.run()
+    ~~~~~~~~~~~^^
+  File "/Users/joshjames/Downloads/prime_dsniff/setup.py", line 65, in run
+    subprocess.check_call(['make'], cwd=c_src_dir, env=env)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py", line 421, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '['make']' returned non-zero exit status 2.
