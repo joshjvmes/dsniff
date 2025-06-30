@@ -14,12 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Ensure install-sh is executable
-        run: |
-          chmod +x dsniff-old/install-sh
-
       - name: Setup Python
-        uses: actions/setup-python@v5  # Updated to latest version
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -37,6 +33,13 @@ jobs:
             libssl-dev \
             bison \
             flex
+
+      - name: Generate install-sh using autoreconf
+        run: |
+          cd dsniff-old
+          autoreconf -i
+          chmod +x install-sh
+          cd ..
 
       - name: Install Python dependencies
         run: |
