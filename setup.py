@@ -28,11 +28,9 @@ class PostInstallCommand(install):
         libnids = env.get('DSNIFF_LIBNIDS', '/usr/local/opt/libnids')
         openssl = env.get('DSNIFF_OPENSSL', '/usr/local/opt/openssl')
 
-        # ✅ Always skip Berkeley DB if we're in CI (e.g., GitHub Actions)
-        if os.getenv('CI'):
-            db_path = None
-        else:
-            # Auto-detect Berkeley DB include/lib paths if provided or on macOS Homebrew
+        # Auto-detect Berkeley DB include/lib paths if provided or on macOS Homebrew
+        db_path = None  # Force-disable Berkeley DB in CI
+        if not os.getenv('CI'):
             db_path = env.get('DSNIFF_DB_PATH')
             if db_path:
                 inc = os.path.join(db_path, 'include', 'db.h')
@@ -64,7 +62,6 @@ class PostInstallCommand(install):
         os.chdir(c_src_dir)
 
         try:
-            # Configure C build
             config_cmd = [
                 './configure',
                 f'--with-libpcap={libpcap}',
@@ -76,14 +73,18 @@ class PostInstallCommand(install):
                 f'--prefix={build_dir}',
             ]
 
-            # ✅ Always disable Berkeley DB in CI
-            if os.getenv('CI'):
-                config_cmd.insert(1, '--with-db=no')
-                print("Forcing --with-db=no in CI")
-            elif db_path:
+            # Configure Berkeley DB support
+            if db_path:
                 config_cmd.insert(1, f'--with-db={db_path}')
-            elif sys.platform == 'darwin':
+            elif sys.platform == 'darwin' or os.getenv('CI'):
                 config_cmd.insert(1, '--with-db=no')
+
+            # 🛠 Skip problematic pcap-bpf.h check in CI
+            if os.getenv('CI'):
+                env['ac_cv_header_pcap_bpf_h'] = 'no'
+                env['ac_cv_header_pcap_nopacketinfo_h'] = 'yes'
+                env['ac_cv_header_pcap_linux_types_h'] = 'no'
+                print("Skipping pcap-bpf.h and other unsupported checks in CI")
 
             print(f"Running configure in {c_src_dir}")
             subprocess.check_call(config_cmd, env=env)
@@ -93,7 +94,6 @@ class PostInstallCommand(install):
             subprocess.check_call(['make', 'install'], env=env)
 
         finally:
-            # Always go back to original working directory
             os.chdir(old_cwd)
 
         # Copy binaries to Python package
