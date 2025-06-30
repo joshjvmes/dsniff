@@ -10,6 +10,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      DSNIFF_DB_PATH: dummy=no-bdb  # Skip Berkeley DB detection in CI as we use dynamic linking
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
