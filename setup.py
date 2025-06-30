@@ -121,7 +121,7 @@ setup(
     # Avoid treating dsniff_py.bin as a package
     package_data={
         "dsniff_py": ["bin/*"]  # Explicitly include binaries as package data
-    }
+    },
     entry_points={
         'console_scripts': [
             'arpspoof=dsniff_py.cli:main',
