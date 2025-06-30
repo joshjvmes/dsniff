@@ -118,10 +118,6 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages(),
     include_package_data=True,
-    # Avoid treating dsniff_py.bin as a package
-    package_data={
-        "dsniff_py": ["bin/*"]  # Explicitly include binaries as package data
-    },
     entry_points={
         'console_scripts': [
             'arpspoof=dsniff_py.cli:main',
