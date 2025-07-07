@@ -138,3 +138,115 @@ For detailed help on each tool, run:
 - Original documentation and license can be found in the `dsniff-old` directory.
 - Binaries are built and installed into the Python package during installation.
 - This wrapper invokes the compiled executables under the hood.
+
+##
+
+Absolutely, Kael here — I’ve drafted an updated `README.md` for your [`dsniff`](https://github.com/joshjvmes/dsniff) fork that reflects your work modernizing it, wrapping it in Python, and making it installable via PyPI. Here's a clean, structured version with sections for clarity and good developer UX:
+
+---
+
+# dsniff (modernized fork)
+
+[![PyPI version](https://img.shields.io/pypi/v/dsniff.svg)](https://pypi.org/project/dsniff/)
+A modernized and Python-wrapped version of the classic `dsniff` suite of network sniffing tools, originally released in 2000. Now working on modern macOS via Homebrew with automated builds and PyPI installation.
+
+## ✨ What's New
+
+This fork brings `dsniff` into the modern development environment:
+
+* ✅ **macOS support**: Clean builds on modern macOS (Intel & Apple Silicon) via Homebrew.
+* 🧠 **Python wrapper**: Native binaries wrapped in a Python package with `console_scripts` entry points.
+* 📦 **Published on PyPI**: Install via `pip install dsniff`.
+* ⚙️ **CI/CD ready**: Automated build/test/release via GitHub Actions.
+* 🖥️ **Interactive CLI**: Optional curses-style interactive menu for tool selection.
+
+---
+
+## 🔧 Build & Compatibility Changes
+
+* `C` source updated to build cleanly on modern systems (tested on macOS).
+* No more static Berkeley DB 1.85 headers required.
+
+  * Dynamic DB support is auto-detected via `--with-db`.
+  * New `record_stubs.c` layer provides stubbed DB operations for tools like `dsniff`, `sshow`, `trigger`.
+* `pcap_init()` renamed to `dsniff_pcap_init()` to avoid naming conflicts with modern `libpcap`.
+* `sshmitm` (which relied on deprecated OpenSSL internals) is no longer built by default.
+* Builds drop into `build/bin` and are then copied into `dsniff_py/bin` for packaging.
+
+### Environment Variable Support
+
+* `DSNIFF_DB_PATH` can override the default DB path.
+
+  * If it points to a non-existent prefix, it is ignored and falls back to auto-detection (e.g., `/usr/local/opt/berkeley-db@*`).
+
+---
+
+## 📦 Python Package
+
+### Installation
+
+```bash
+pip install dsniff
+```
+
+### Tools Included
+
+These wrap the original `dsniff` binaries:
+
+* `dsniff`
+* `arpspoof`
+* `dnsspoof`
+* `macof`
+* `filesnarf`
+* `mailsnarf`
+* `msgsnarf`
+* `tcpkill`
+* `tcpnice`
+* and more...
+
+### Usage
+
+```bash
+dsniff
+# Or run the interactive curses-style CLI:
+dsniff-menu
+```
+
+> Note: The interactive menu is optional and helps quickly run the right tool via keyboard input.
+
+---
+
+## 🧪 Development
+
+### Build locally
+
+```bash
+brew install libpcap berkeley-db
+./configure --with-db
+make
+```
+
+Then build the Python package:
+
+```bash
+python3 setup.py install
+```
+
+### Run tests
+
+```bash
+pytest
+```
+
+---
+
+## 🙌 Credits
+
+Original tools by **Dug Song**
+Modernized fork and Python wrapper by [@joshjvmes](https://github.com/joshjvmes)
+
+---
+
+## 📄 License
+
+This project is distributed under the same license as the original dsniff tools. See [LICENSE](./LICENSE) for details.
