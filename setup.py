@@ -116,7 +116,7 @@ if os.path.exists('README.md'):
 
 setup(
     name='dsniff',
-    version='0.1.4',
+    version='0.1.5',
     author='Modified Dug Song dsniff by Josh James',
     author_email='josh@rocketnow.com',
     description='Python wrapper for dsniff network utilities',
