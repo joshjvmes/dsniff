@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dsniff"
-version = "0.1.1"
+version = "0.1.2"
 description = "This package provides a new Python wrapper for the dsniff network sniffer suite (originally by Dug Song)."
 readme = "README.md"
 license = "BSD-Source-Code"
