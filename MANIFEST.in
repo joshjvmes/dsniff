@@ -1,5 +1,7 @@
 include README.md LICENSE pyproject.toml setup.py
 include dsniff_py/*.py
+include dsniff_py/dsniff.services
+include dsniff_py/dsniff.magic
 
 # Include all files needed for building dsniff-old
 recursive-include dsniff-old *
