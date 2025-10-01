@@ -1,1 +1,0 @@
-# Package for binary launchers (holds compiled dsniff executables)
