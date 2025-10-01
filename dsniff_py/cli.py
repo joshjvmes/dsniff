@@ -5,7 +5,7 @@ import subprocess
 def setup_config_files():
     """Setup dsniff configuration files by creating symlinks."""
     pkg_dir = os.path.dirname(__file__)
-    config_dir = '/usr/share/dsniff'
+    config_dir = '/usr/local/share/dsniff'
 
     # Check if config directory exists
     if not os.path.exists(config_dir):
@@ -41,15 +41,15 @@ def main():
         return 1
 
     # Try to setup config files
-    config_check = '/usr/share/dsniff/dsniff.services'
+    config_check = '/usr/local/share/dsniff/dsniff.services'
     if not os.path.exists(config_check):
         if not setup_config_files():
             # Print helpful error message
             sys.stderr.write(f"\nError: dsniff configuration files not found.\n")
             sys.stderr.write(f"Please run the following commands to set them up:\n\n")
-            sys.stderr.write(f"  sudo mkdir -p /usr/share/dsniff\n")
-            sys.stderr.write(f"  sudo cp {pkg_dir}/dsniff.services /usr/share/dsniff/\n")
-            sys.stderr.write(f"  sudo cp {pkg_dir}/dsniff.magic /usr/share/dsniff/\n\n")
+            sys.stderr.write(f"  mkdir -p /usr/local/share/dsniff\n")
+            sys.stderr.write(f"  cp {pkg_dir}/dsniff.services /usr/local/share/dsniff/\n")
+            sys.stderr.write(f"  cp {pkg_dir}/dsniff.magic /usr/local/share/dsniff/\n\n")
             return 1
 
     args = [exe_path] + sys.argv[1:]

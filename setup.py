@@ -65,6 +65,7 @@ To use dsniff tools, install via 'pip install .' or use system binaries.
                 '--without-x',
                 f'--sbindir={os.path.join(build_dir, "bin")}',
                 f'--prefix={build_dir}',
+                f'--libdir=/usr/local/share/dsniff',
             ]
 
             if db_path:
@@ -79,6 +80,10 @@ To use dsniff tools, install via 'pip install .' or use system binaries.
 
             print(f"Running configure in {c_src_dir}")
             subprocess.check_call(config_cmd, env=env)
+
+            # Override CFLAGS to set custom DSNIFF_LIBDIR
+            env['CFLAGS'] = env.get('CFLAGS', '') + ' -DDSNIFF_LIBDIR=\"/usr/local/share/dsniff/\"'
+
             subprocess.check_call(['make'], env=env)
             subprocess.check_call(['make', 'install'], env=env)
 
@@ -100,7 +105,8 @@ class ConditionalBuild(build_py):
             print("Skipping native build for wheel")
             return super().run()
         print("Building native components...")
-        PostInstallCommand.run(self)
+        # Call parent first to build Python files
+        super().run()
 
 
 long_description = ''
@@ -110,7 +116,7 @@ if os.path.exists('README.md'):
 
 setup(
     name='dsniff',
-    version='0.1.3',
+    version='0.1.4',
     author='Modified Dug Song dsniff by Josh James',
     author_email='josh@rocketnow.com',
     description='Python wrapper for dsniff network utilities',
